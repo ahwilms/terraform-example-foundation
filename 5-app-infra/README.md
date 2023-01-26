@@ -2,7 +2,7 @@
 
 This repo is part of a multi-part guide that shows how to configure and deploy
 the example.com reference architecture described in
-[Google Cloud security foundations guide](https://cloud.google.com/architecture/security-foundations). The following table lists the parts of the guide.
+[Google Cloud security foundations guide](https://cloud.google.com/architecture/security-foundations). The following table lists the stages of this deployment.
 
 <table>
 <tbody>
@@ -10,7 +10,7 @@ the example.com reference architecture described in
 <td><a href="../0-bootstrap">0-bootstrap</a></td>
 <td>Bootstraps a Google Cloud organization, creating all the required resources
 and permissions to start using the Cloud Foundation Toolkit (CFT). This
-step also configures a <a href="../docs/GLOSSARY.md#foundation-cicd-pipeline">CI/CD Pipeline</a> for foundations code in subsequent
+step also configures a <a href="../docs/GLOSSARY.md#foundation-cicd-pipeline">CI/CD pipeline</a> for foundations code in subsequent
 stages.</td>
 </tr>
 <tr>
@@ -35,7 +35,7 @@ up the global DNS hub.</td>
 <td><a href="../3-networks-hub-and-spoke">3-networks-hub-and-spoke</a></td>
 <td>Sets up base and restricted shared VPCs with all the default configuration
 found on step 3-networks-dual-svpc, but here the architecture will be based on the
-Hub and Spoke network model. It also sets up the global DNS hub</td>
+Hub and Spoke network model. It also sets up the global DNS hub.</td>
 </tr>
 <tr>
 <td><a href="../4-projects">4-projects</a></td>
@@ -44,7 +44,7 @@ Hub and Spoke network model. It also sets up the global DNS hub</td>
 </tr>
 <tr>
 <td>5-app-infra (this file)</td>
-<td>Deploy a simple [Compute Engine](https://cloud.google.com/compute/) instance in one of the business unit projects using the infra pipeline set up in 4-projects.</td>
+<td>Deploy a [Compute Engine](https://cloud.google.com/compute/) instance in one of the business unit projects using the infra pipeline setup in 4-projects.</td>
 </tr>
 </tbody>
 </table>
@@ -55,10 +55,10 @@ file.
 
 ## Purpose
 
-The purpose of this step is to deploy a simple [Compute Engine](https://cloud.google.com/compute/) instance in one of the business unit projects using the infra pipeline set up in 4-projects.
+The purpose of this step is to deploy a [Compute Engine](https://cloud.google.com/compute/) instance in one of the business unit projects using the infra pipeline set up in 4-projects.
 The infra pipeline is created in step `4-projects` within the shared env and has a [Cloud Build](https://cloud.google.com/build/docs) pipeline configured to manage infrastructure within projects.
 
-There is also a [Source Repository](https://cloud.google.com/source-repositories) configured with build triggers similar to the [CI/CD Pipeline](https://github.com/terraform-google-modules/terraform-example-foundation#0-bootstrap) setup in `0-bootstrap`.
+There is also a [Cloud Source Repositories](https://cloud.google.com/source-repositories) configured with build triggers that are similar to the [CI/CD pipeline](https://github.com/terraform-google-modules/terraform-example-foundation#0-bootstrap) setup in `0-bootstrap`.
 This Compute Engine instance is created using the base network from step `3-networks` and is used to access private services.
 
 ## Prerequisites
@@ -71,18 +71,18 @@ This Compute Engine instance is created using the base network from step `3-netw
 
 ### Troubleshooting
 
-Please refer to [troubleshooting](../docs/TROUBLESHOOTING.md) if you run into issues during this step.
+See [troubleshooting](../docs/TROUBLESHOOTING.md) if you run into issues during this step.
 
 ## Usage
 
-**Note:** If you are using MacOS, replace `cp -RT` with `cp -R` in the relevant
+If you are using MacOS, replace `cp -RT` with `cp -R` in the relevant
 commands. The `-T` flag is needed for Linux, but causes problems for MacOS.
 
 ### Deploying with Cloud Build
 
 1. Clone the `gcp-policies` repo based on the Terraform output from the `0-bootstrap` step.
-Clone the repo at the same level of the `terraform-example-foundation` folder, the following instructions assume this layout.
-Run `terraform output cloudbuild_project_id` in the `0-bootstrap` folder to get the Cloud Build Project ID.
+Clone the repo at the same level as the `terraform-example-foundation` folder.
+If required, run `terraform output cloudbuild_project_id` in the `0-bootstrap` folder to get the Cloud Build Project ID.
 
    ```bash
    export INFRA_PIPELINE_PROJECT_ID=$(terraform -chdir="gcp-projects/business_unit_1/shared/" output -raw cloudbuild_project_id)
@@ -91,10 +91,10 @@ Run `terraform output cloudbuild_project_id` in the `0-bootstrap` folder to get 
    gcloud source repos clone gcp-policies gcp-policies-app-infra --project=${INFRA_PIPELINE_PROJECT_ID}
    ```
 
-   **Note:** `gcp-policies` repo has the same name as the repo created in step `1-org`. In order to prevent a collision, the previous command will clone this repo in the folder `gcp-policies-app-infra`.
+   **Note:** `gcp-policies` repo has the same name as the repo created in step `1-org`. In order to prevent a collision, this command will clone this repo in the `gcp-policies-app-infra` folder.
 
-1. Navigate into the repo and copy contents of policy-library to new repo. All subsequent steps assume you are running them
-   from the gcp-policies-app-infra directory. If you run them from another directory,
+1. Navigate into the repo and copy the contents of `policy-library` to the new repo. All subsequent steps assume you are running them
+   from the `gcp-policies-app-infra` directory. If you run them from another directory,
    adjust your copy paths accordingly.
 
    ```bash
@@ -125,9 +125,8 @@ Run `terraform output cloudbuild_project_id` in the `0-bootstrap` folder to get 
    gcloud source repos clone bu1-example-app --project=${INFRA_PIPELINE_PROJECT_ID}
    ```
 
-1. Navigate into the repo, change to non-main branch and copy contents of foundation to new repo.
-   All subsequent steps assume you are running them from the bu1-example-app directory.
-   If you run them from another directory, adjust your copy paths accordingly.
+1. Navigate into the repo, change to a non-main branch, and copy the contents of the foundation to new repo (the `bu1-example-app` directory).
+   If you run the remaining steps from another directory, adjust your copy paths accordingly.
 
    ```bash
    cd bu1-example-app
@@ -145,7 +144,7 @@ Run `terraform output cloudbuild_project_id` in the `0-bootstrap` folder to get 
    mv common.auto.example.tfvars common.auto.tfvars
    ```
 
-1. Update the file with values from your environment and 0-bootstrap. See any of the business unit 1 envs folders [README.md](./business_unit_1/production/README.md) files for additional information on the values in the `common.auto.tfvars` file.
+1. Update the file with values from your environment and 0-bootstrap. See any of the [README.md](./business_unit_1/production/README.md) files from the business unit 1 `envs` folders for additional information on the values in the `common.auto.tfvars` file.
 
    ```bash
    export remote_state_bucket=$(terraform -chdir="../terraform-example-foundation/0-bootstrap/" output -raw projects_gcs_bucket_tfstate)
@@ -168,7 +167,7 @@ Run `terraform output cloudbuild_project_id` in the `0-bootstrap` folder to get 
    git push --set-upstream origin plan
    ```
 
-1. Merge changes to development. Because this is a [named environment branch](../docs/FAQ.md#what-is-a-named-branch),
+1. Merge changes to the development branch. Because this is a [named environment branch](../docs/FAQ.md#what-is-a-named-branch),
    pushing to this branch triggers both _terraform plan_ and _terraform apply_. Review the apply output in your Cloud Build project https://console.cloud.google.com/cloud-build/builds;region=DEFAULT_REGION?project=YOUR_INFRA_PIPELINE_PROJECT_ID
 
    ```bash
@@ -176,15 +175,15 @@ Run `terraform output cloudbuild_project_id` in the `0-bootstrap` folder to get 
    git push origin development
    ```
 
-1. Merge changes to non-production. Because this is a [named environment branch](../docs/FAQ.md#what-is-a-named-branch),
-   pushing to this branch triggers both _terraform plan_ and _terraform apply_. Review the apply output in your Cloud Build project https://console.cloud.google.com/cloud-build/builds;region=DEFAULT_REGION?project=YOUR_INFRA_PIPELINE_PROJECT_ID
+1. Merge changes to the non-production branch. Because this is a [named environment branch](../docs/FAQ.md#what-is-a-named-branch),
+   pushing to this branch triggers both _terraform plan_ and _terraform apply_. Review the apply output in your Cloud Build project https://console.cloud.google.com/cloud-build/builds;region=DEFAULT_REGION?project=YOUR_INFRA_PIPELINE_PROJECT_ID.
 
    ```bash
    git checkout -b non-production
    git push origin non-production
    ```
 
-1. Merge changes to production branch. Because this is a [named environment branch](../docs/FAQ.md#what-is-a-named-branch),
+1. Merge changes to the production branch. Because this is a [named environment branch](../docs/FAQ.md#what-is-a-named-branch),
       pushing to this branch triggers both _terraform plan_ and _terraform apply_. Review the apply output in your Cloud Build project https://console.cloud.google.com/cloud-build/builds;region=DEFAULT_REGION?project=YOUR_INFRA_PIPELINE_PROJECT_ID
 
    ```bash
@@ -194,7 +193,7 @@ Run `terraform output cloudbuild_project_id` in the `0-bootstrap` folder to get 
 
 ### Run Terraform locally
 
-1. The next instructions assume that you are at the same level of the `terraform-example-foundation` folder. Change into `5-app-infra` folder, copy the Terraform wrapper script and ensure it can be executed.
+1. The next instructions assume that you are at the same level of the `terraform-example-foundation` folder. Change into `5-app-infra` folder, copy the Terraform wrapper script, and ensure it can be executed.
 
    ```bash
    cd terraform-example-foundation/5-app-infra
@@ -218,7 +217,7 @@ Run `terraform output cloudbuild_project_id` in the `0-bootstrap` folder to get 
    ```
 
 1. Provide the user that will be running `./tf-wrapper.sh` the Service Account Token Creator role to the bu1 Terraform service account.
-1. Provide the user permissions to run the terraform locally with the `serviceAccountTokenCreator` permission.
+1. Provide the user permissions to run the Terraform locally with the `serviceAccountTokenCreator` permission.
 
    ```bash
    member="user:$(gcloud auth list --filter="status=ACTIVE" --format="value(account)")"
@@ -242,12 +241,12 @@ Run `terraform output cloudbuild_project_id` in the `0-bootstrap` folder to get 
    for i in `find -name 'backend.tf'`; do sed -i "s/UPDATE_APP_INFRA_BUCKET/${backend_bucket}/" $i; done
    ```
 
-We will now deploy each of our environments (development/production/non-production) using this script.
+You can now deploy each of your environments (development, production, and non-production) using this script.
 When using Cloud Build or Jenkins as your CI/CD tool, each environment corresponds to a branch in the repository for the `5-app-infra` step. Only the corresponding environment is applied.
 
-To use the `validate` option of the `tf-wrapper.sh` script, please follow the [instructions](https://cloud.google.com/docs/terraform/policy-validation/validate-policies#install) to install the terraform-tools component.
+To use the `validate` option of the `tf-wrapper.sh` script, see [Install Google Cloud CLI](https://cloud.google.com/docs/terraform/policy-validation/validate-policies#install) to install the terraform-tools component.
 
-1. Use `terraform output` to get the Infra Pipeline Project ID from 4-projects output.
+1. Use `terraform output` to get the Infra Pipeline Project ID from the 4-projects output.
 
    ```bash
    export INFRA_PIPELINE_PROJECT_ID=$(terraform -chdir="../4-projects/business_unit_1/shared/" output -raw cloudbuild_project_id)
@@ -257,7 +256,7 @@ To use the `validate` option of the `tf-wrapper.sh` script, please follow the [i
    echo ${GOOGLE_IMPERSONATE_SERVICE_ACCOUNT}
    ```
 
-1. Run `init` and `plan` and review output for environment production.
+1. Run `init` and `plan` and review the output for the production environment.
 
    ```bash
    ./tf-wrapper.sh init production
@@ -270,13 +269,13 @@ To use the `validate` option of the `tf-wrapper.sh` script, please follow the [i
    ./tf-wrapper.sh validate production $(pwd)/../policy-library ${INFRA_PIPELINE_PROJECT_ID}
    ```
 
-1. Run `apply` production.
+1. Run `apply` for the production environment.
 
    ```bash
    ./tf-wrapper.sh apply production
    ```
 
-1. Run `init` and `plan` and review output for environment non-production.
+1. Run `init` and `plan` and review the output for the non-production environment.
 
    ```bash
    ./tf-wrapper.sh init non-production
@@ -289,13 +288,13 @@ To use the `validate` option of the `tf-wrapper.sh` script, please follow the [i
    ./tf-wrapper.sh validate non-production $(pwd)/../policy-library ${INFRA_PIPELINE_PROJECT_ID}
    ```
 
-1. Run `apply` non-production.
+1. Run `apply` for the non-production environment.
 
    ```bash
    ./tf-wrapper.sh apply non-production
    ```
 
-1. Run `init` and `plan` and review output for environment development.
+1. Run `init` and `plan` and review the output for the development environment.
 
    ```bash
    ./tf-wrapper.sh init development
@@ -308,13 +307,13 @@ To use the `validate` option of the `tf-wrapper.sh` script, please follow the [i
    ./tf-wrapper.sh validate development $(pwd)/../policy-library ${INFRA_PIPELINE_PROJECT_ID}
    ```
 
-1. Run `apply` development.
+1. Run `apply` for the development environment.
 
    ```bash
    ./tf-wrapper.sh apply development
    ```
 
-If you received any errors or made any changes to the Terraform config or `common.auto.tfvars` you must re-run `./tf-wrapper.sh plan <env>` before running `./tf-wrapper.sh apply <env>`.
+If you received any errors or made any changes to the Terraform config or `common.auto.tfvars`, re-run `./tf-wrapper.sh plan <env>` before running `./tf-wrapper.sh apply <env>`.
 
 After executing this stage, unset the `GOOGLE_IMPERSONATE_SERVICE_ACCOUNT` environment variable.
 
